@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaviCare - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Background Elements -->
+        <div class="background-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <!-- Login Form Container -->
+        <div class="login-container">
+            <div class="login-form">
+                <!-- Logo and Branding -->
+                <div class="brand-section">
+                    <div class="logo">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h1 class="brand-title">NaviCare</h1>
+                    <p class="brand-subtitle">Personalized Healthcare Navigation System</p>
+                </div>
+
+                <!-- Welcome Message -->
+                <div class="welcome-section">
+                    <h2 class="welcome-title">Welcome to Your Care Journey</h2>
+                    <p class="welcome-subtitle">Sign in to access personalized healthcare navigation</p>
+                </div>
+
+                <!-- Login Form -->
+                <form class="form" id="loginForm" novalidate>
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="fas fa-user input-icon"></i>
+                            <input 
+                                type="text" 
+                                id="email" 
+                                name="email" 
+                                class="form-input" 
+                                placeholder="Username"
+                                autocomplete="username"
+                                aria-describedby="email-error"
+                            >
+                        </div>
+                        <div class="error-message" id="email-error" role="alert"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Password"
+                                autocomplete="current-password"
+                                aria-describedby="password-error"
+                            >
+                            <button type="button" class="password-toggle" aria-label="Toggle password visibility">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="error-message" id="password-error" role="alert"></div>
+                    </div>
+
+                    <!-- Remember Me and Forgot Password -->
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-label">Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span class="btn-text">Sign In</span>
+                        <div class="btn-loader">
+                            <div class="loader-spinner"></div>
+                        </div>
+                    </button>
+
+                    <!-- Alternative Login Methods -->
+                    <div class="divider">
+                        <span>Or continue with</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button type="button" class="social-btn google-btn">
+                            <i class="fab fa-google"></i>
+                            <span>Google</span>
+                        </button>
+                        <button type="button" class="social-btn microsoft-btn">
+                            <i class="fab fa-microsoft"></i>
+                            <span>Microsoft</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Sign Up Link -->
+                <div class="signup-section">
+                    <p>Don't have an account? <a href="#" class="signup-link">Sign up here</a></p>
+                </div>
+            </div>
+
+            <!-- Side Panel for larger screens -->
+            <div class="side-panel">
+                <div class="side-content">
+                    <div class="side-illustration">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3 class="side-title">Simplified Healthcare Navigation</h3>
+                    <p class="side-description">
+                        Navigate complex insurance rules, find the right specialists, compare medication prices, and book appointments - all in one coordinated system.
+                    </p>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Insurance coverage validation</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-user-md"></i>
+                            <span>Smart specialist matching</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-pills"></i>
+                            <span>Pharmacy price comparison</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success/Error Notifications -->
+        <div class="notification" id="notification">
+            <div class="notification-content">
+                <i class="notification-icon"></i>
+                <span class="notification-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaviCare Dashboard Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0077be;
+            text-align: center;
+        }
+        .status {
+            padding: 20px;
+            background: #22c55e;
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .debug-info {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .btn {
+            background: #0077be;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #005a8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎉 NaviCare Dashboard Loaded Successfully!</h1>
+        
+        <div class="status">
+            ✅ Dashboard is working! The redirect was successful.
+        </div>
+        
+        <div class="debug-info">
+            <h3>Debug Information:</h3>
+            <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+            <p><strong>User from localStorage:</strong> <span id="storedUser"></span></p>
+            <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+        </div>
+        
+        <p>This confirms that:</p>
+        <ul>
+            <li>✅ Login credentials (test_user/test) work correctly</li>
+            <li>✅ Redirect from login page is functioning</li>
+            <li>✅ Dashboard.html file loads properly</li>
+            <li>✅ LocalStorage data transfer works</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn" onclick="goBack()">← Back to Login</button>
+            <button class="btn" onclick="loadFullDashboard()" style="margin-left: 10px;">Load Full Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // Display debug information
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('storedUser').textContent = localStorage.getItem('userName') || 'Not found';
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        console.log('Test dashboard loaded successfully!');
+        console.log('Stored username:', localStorage.getItem('userName'));
+        
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+        
+        function loadFullDashboard() {
+            // We can implement this to load the full complex dashboard
+            alert('Full dashboard loading will be implemented once basic redirect is confirmed working.');
+        }
+    </script>
+</body>
+</html>

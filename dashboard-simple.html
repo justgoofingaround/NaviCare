@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaviCare Dashboard - Simple</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0077be 0%, #00a693 100%);
+            margin: 0;
+            padding: 20px;
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .debug-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        button {
+            background: #4fc3f7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #29b6f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 NaviCare Dashboard - Debug Mode</h1>
+            <p>Welcome, <span id="userName">Loading...</span>!</p>
+        </div>
+        
+        <div class="debug-info">
+            <h3>🐛 Debug Information</h3>
+            <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+            <p><strong>User from localStorage:</strong> <span id="storedUser"></span></p>
+            <p><strong>JavaScript Status:</strong> <span id="jsStatus">Loading...</span></p>
+            <p><strong>CSS Status:</strong> ✅ Basic CSS Loaded</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>🧪 Simple Tests</h3>
+            <button onclick="testLocalStorage()">Test localStorage</button>
+            <button onclick="testNotification()">Test Notification</button>
+            <button onclick="testRedirect()">Test Redirect to Full Dashboard</button>
+            <button onclick="logout()">Logout</button>
+            <div id="testResults" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📝 Simple Form Test</h3>
+            <form id="simpleForm">
+                <textarea placeholder="Enter test symptoms..." rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: none;"></textarea>
+                <br><br>
+                <button type="submit">Submit Test</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        console.log('Simple dashboard JavaScript loading...');
+        
+        // Basic initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Simple dashboard DOM loaded');
+            
+            // Display current URL
+            document.getElementById('currentUrl').textContent = window.location.href;
+            
+            // Get and display user from localStorage
+            const userName = localStorage.getItem('userName') || 'Unknown';
+            document.getElementById('storedUser').textContent = userName;
+            document.getElementById('userName').textContent = userName;
+            
+            // Mark JavaScript as loaded
+            document.getElementById('jsStatus').textContent = '✅ JavaScript Loaded Successfully';
+            
+            console.log('Simple dashboard initialization complete');
+        });
+        
+        // Test functions
+        function testLocalStorage() {
+            const results = document.getElementById('testResults');
+            const userName = localStorage.getItem('userName');
+            results.innerHTML = `<strong>localStorage Test:</strong> ${userName ? `Found user: ${userName}` : 'No user found'}`;
+        }
+        
+        function testNotification() {
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<strong>Notification Test:</strong> This would be a notification!';
+            alert('Simple notification test');
+        }
+        
+        function testRedirect() {
+            console.log('Testing redirect to full dashboard...');
+            window.location.href = 'dashboard.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('userName');
+            window.location.href = 'index.html';
+        }
+        
+        // Simple form test
+        document.getElementById('simpleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const results = document.getElementById('testResults');
+            results.innerHTML = '<strong>Form Test:</strong> ✅ Form submission works!';
+        });
+        
+        console.log('Simple dashboard JavaScript fully loaded');
+    </script>
+</body>
+</html>
