@@ -1,376 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NaviCare Dashboard - Healthcare Journey Navigation</title>
-    <link rel="stylesheet" href="dashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NaviCare Dashboard - Healthcare Journey Navigation</title>
+
+  <!-- existing page styles -->
+  <link rel="stylesheet" href="dashboard.css">
+  <!-- shared style system -->
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <!-- icons + font -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    /* small helpers for summary cards */
+    .summary-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .summary-card .title{display:flex;align-items:center;gap:10px;font-weight:600;margin-bottom:6px;color:var(--nc-light)}
+    .progress-mini{height:8px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
+    .progress-mini > span{display:block;height:100%;background:linear-gradient(90deg,var(--nc-teal),var(--nc-light))}
+    .hidden{display:none}
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-container">
-            <div class="brand">
-                <div class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                </div>
-                <span class="brand-name">NaviCare</span>
-            </div>
-            
-            <div class="header-actions">
-                <div class="user-info">
-                    <i class="fas fa-user-circle user-avatar"></i>
-                    <span class="user-welcome">Welcome, <span id="userName">Patient</span></span>
-                </div>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Hero Section -->
-            <section class="hero-section">
-                <div class="hero-content">
-                    <h1 class="hero-title">Your Healthcare Journey</h1>
-                    <p class="hero-subtitle">Navigate your care with AI-powered agents guiding every step</p>
-                </div>
-                <div class="hero-illustration">
-                    <div class="floating-icon">
-                        <i class="fas fa-user-md"></i>
-                    </div>
-                    <div class="floating-icon">
-                        <i class="fas fa-pills"></i>
-                    </div>
-                    <div class="floating-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Enhanced Workflow Progress -->
-            <section class="workflow-progress">
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <h2 class="progress-title">Your Care Journey Progress</h2>
-                        <div class="progress-stats">
-                            <div class="progress-stat">
-                                <span class="stat-number">1</span>
-                                <span class="stat-label">Steps Completed</span>
-                            </div>
-                            <div class="progress-stat">
-                                <span class="stat-number">4</span>
-                                <span class="stat-label">Total Steps</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="progress-track">
-                        <div class="progress-line"></div>
-                        <div class="step-indicators">
-                            <div class="step-indicator active">
-                                <div class="step-circle">
-                                    <i class="fas fa-clipboard-list"></i>
-                                </div>
-                                <div class="step-info">
-                                    <div class="step-title">Patient Input</div>
-                                    <div class="step-description">Describe your health concerns</div>
-                                </div>
-                            </div>
-                            
-                            <div class="step-indicator">
-                                <div class="step-circle">
-                                    <i class="fas fa-user-md"></i>
-                                </div>
-                                <div class="step-info">
-                                    <div class="step-title">Patient Agent</div>
-                                    <div class="step-description">Analyze and distribute tasks</div>
-                                </div>
-                            </div>
-                            
-                            <div class="step-indicator">
-                                <div class="step-circle">
-                                    <i class="fas fa-tasks"></i>
-                                </div>
-                                <div class="step-info">
-                                    <div class="step-title">Specialist Agents</div>
-                                    <div class="step-description">Insurance, Doctor, Pharmacy</div>
-                                </div>
-                            </div>
-                            
-                            <div class="step-indicator">
-                                <div class="step-circle">
-                                    <i class="fas fa-clipboard-check"></i>
-                                </div>
-                                <div class="step-info">
-                                    <div class="step-title">Coordinator</div>
-                                    <div class="step-description">Compile care plan</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Modern Symptom Input -->
-            <section class="symptom-input-section">
-                <div class="symptom-card">
-                    <div class="card-header-modern">
-                        <div class="header-icon">
-                            <i class="fas fa-clipboard-list"></i>
-                        </div>
-                        <div class="header-content">
-                            <h3 class="card-title-modern">Tell Us About Your Symptoms</h3>
-                            <p class="card-subtitle">Start your healthcare journey by describing how you're feeling</p>
-                        </div>
-                    </div>
-                    
-                    <div class="card-body-modern">
-                        <form class="symptom-form" id="symptomForm">
-                            <div class="form-group-modern">
-                                <label class="form-label-modern">
-                                    <i class="fas fa-comment-medical"></i>
-                                    Describe your symptoms
-                                </label>
-                                <div class="input-wrapper">
-                                    <textarea 
-                                        id="symptoms" 
-                                        class="form-textarea-modern" 
-                                        placeholder="Describe your symptoms. For Ex: Fever, cough, etc."
-                                        maxlength="500"
-                                    ></textarea>
-                                    <div class="input-helper">
-                                        <span class="character-count">0/500</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row-modern">
-                                <div class="form-group-modern">
-                                    <label class="form-label-modern">
-                                        <i class="fas fa-thermometer-half"></i>
-                                        Severity Level
-                                    </label>
-                                    <select id="severity" class="form-select-modern">
-                                        <option value="">Select severity</option>
-                                        <option value="mild">Mild - Minimal discomfort</option>
-                                        <option value="moderate">Moderate - Noticeable discomfort</option>
-                                        <option value="severe">Severe - Significant pain/discomfort</option>
-                                        <option value="critical">Critical - Emergency attention needed</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group-modern">
-                                    <label class="form-label-modern">
-                                        <i class="fas fa-clock"></i>
-                                        Duration
-                                    </label>
-                                    <select id="duration" class="form-select-modern">
-                                        <option value="">How long?</option>
-                                        <option value="hours">A few hours</option>
-                                        <option value="days">1-3 days</option>
-                                        <option value="week">About a week</option>
-                                        <option value="weeks">Several weeks</option>
-                                        <option value="months">Months or longer</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <button type="button" class="btn-modern btn-primary-modern" onclick="handleFormSubmit()">
-                                <span class="btn-text">Start My Care Journey</span>
-                                <span class="btn-icon">
-                                    <i class="fas fa-arrow-right"></i>
-                                </span>
-                                <div class="btn-loader">
-                                    <div class="spinner"></div>
-                                </div>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Modern Agent Cards -->
-            <section class="agents-section-modern">
-                <!-- Patient Agent -->
-                <div class="agent-card-modern" data-agent="patient">
-                    <div class="agent-header-modern">
-                        <div class="agent-avatar patient">
-                            <div class="agent-pulse"></div>
-                            <i class="fas fa-user-md"></i>
-                        </div>
-                        <div class="agent-info-modern">
-                            <h4 class="agent-title-modern">Patient Agent</h4>
-                            <p class="agent-status-modern">Waiting for symptoms</p>
-                            <div class="agent-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="agent-indicator-modern">
-                            <div class="status-badge waiting">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agent-content-modern">
-                        <p>I'll analyze your symptoms and distribute tasks to specialist agents.</p>
-                    </div>
-                </div>
-
-                <!-- Insurance Agent -->
-                <div class="agent-card-modern" data-agent="insurance">
-                    <div class="agent-header-modern">
-                        <div class="agent-avatar insurance">
-                            <div class="agent-pulse"></div>
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div class="agent-info-modern">
-                            <h4 class="agent-title-modern">Insurance Agent</h4>
-                            <p class="agent-status-modern">Waiting for patient agent</p>
-                            <div class="agent-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="agent-indicator-modern">
-                            <div class="status-badge waiting">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agent-content-modern">
-                        <p>I'll verify your insurance coverage and benefits for the recommended care.</p>
-                    </div>
-                </div>
-
-                <!-- Doctor Agent -->
-                <div class="agent-card-modern" data-agent="doctor">
-                    <div class="agent-header-modern">
-                        <div class="agent-avatar doctor">
-                            <div class="agent-pulse"></div>
-                            <i class="fas fa-stethoscope"></i>
-                        </div>
-                        <div class="agent-info-modern">
-                            <h4 class="agent-title-modern">Doctor Agent</h4>
-                            <p class="agent-status-modern">Waiting for patient agent</p>
-                            <div class="agent-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="agent-indicator-modern">
-                            <div class="status-badge waiting">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agent-content-modern">
-                        <p>I'll analyze your symptoms and recommend qualified doctors in your area.</p>
-                    </div>
-                </div>
-
-                <!-- Pharmacy Agent -->
-                <div class="agent-card-modern" data-agent="pharmacy">
-                    <div class="agent-header-modern">
-                        <div class="agent-avatar pharmacy">
-                            <div class="agent-pulse"></div>
-                            <i class="fas fa-pills"></i>
-                        </div>
-                        <div class="agent-info-modern">
-                            <h4 class="agent-title-modern">Pharmacy Agent</h4>
-                            <p class="agent-status-modern">Waiting for patient agent</p>
-                            <div class="agent-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="agent-indicator-modern">
-                            <div class="status-badge waiting">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agent-content-modern">
-                        <p>I'll find the best prices and locations for your medications.</p>
-                    </div>
-                </div>
-
-                <!-- Coordinator Agent -->
-                <div class="agent-card-modern" data-agent="coordinator">
-                    <div class="agent-header-modern">
-                        <div class="agent-avatar coordinator">
-                            <div class="agent-pulse"></div>
-                            <i class="fas fa-clipboard-check"></i>
-                        </div>
-                        <div class="agent-info-modern">
-                            <h4 class="agent-title-modern">Care Coordinator</h4>
-                            <p class="agent-status-modern">Waiting for specialist agents</p>
-                            <div class="agent-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="agent-indicator-modern">
-                            <div class="status-badge waiting">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="agent-content-modern">
-                        <p>I'll coordinate all specialist agent results and create your personalized care plan.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Modern Care Plan -->
-            <section class="care-plan-section-modern" style="display: none;">
-                <div class="care-plan-card">
-                    <div class="care-plan-header">
-                        <div class="header-icon-large">
-                            <i class="fas fa-map-marked-alt"></i>
-                        </div>
-                        <div class="header-content-large">
-                            <h2 class="care-plan-title">Your Personalized Care Plan</h2>
-                            <p class="care-plan-subtitle">Complete roadmap for your healthcare journey</p>
-                        </div>
-                        <div class="care-plan-badge">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Complete</span>
-                        </div>
-                    </div>
-                    <div class="care-plan-body">
-                        <h3 class="section-title">Next Steps</h3>
-                        <div id="carePlanContent">
-                            <!-- Care plan content will be populated by JavaScript -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Notification System -->
-    <div class="notification" id="notification">
-        <div class="notification-content">
-            <i class="notification-icon"></i>
-            <span class="notification-message"></span>
-        </div>
+  <!-- Navbar -->
+  <header class="nc-header">
+    <div class="container">
+      <div class="nc-bar">
+        <a class="brand" href="dashboard.html">🩺 NaviCare</a>
+        <nav class="nc-nav">
+          <a href="dashboard.html" class="active">Intake</a>
+          <a href="providers.html">Providers</a>
+          <a href="insurance.html">Insurance</a>
+          <a href="pharmacy.html">Pharmacy</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="small">Welcome, <b>test_user</b></div>
+      </div>
     </div>
+  </header>
 
-    <script src="dashboard.js?v=3"></script>
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Hero -->
+      <section class="section">
+        <h1 class="hero-title">Your Healthcare Journey</h1>
+        <p class="small">Navigate your care with AI-powered agents guiding every step.</p>
+      </section>
+
+      <!-- Progress -->
+      <section class="section card">
+        <h2>Your Care Journey Progress</h2>
+        <div class="row" style="align-items:center;gap:12px;margin-top:8px">
+          <div class="col-9">
+            <div class="progress-mini"><span id="progressFill" style="width:0%"></span></div>
+          </div>
+          <div class="col-3 small" style="text-align:right">
+            <span id="stepsDone">0</span> / <span>4</span> steps
+          </div>
+        </div>
+      </section>
+
+      <!-- Intake -->
+      <section class="section card">
+        <div class="card-header-modern">
+          <div class="header-icon"><i class="fas fa-clipboard-list"></i></div>
+          <div class="header-content">
+            <h3 class="card-title-modern">Tell Us About Your Symptoms</h3>
+            <p class="card-subtitle">Describe what you’re experiencing to kick off your journey.</p>
+          </div>
+        </div>
+
+        <div class="card-body-modern">
+          <form id="symptomForm" class="symptom-form">
+            <div class="form-group-modern">
+              <label class="form-label-modern"><i class="fas fa-comment-medical"></i> Describe your symptoms</label>
+              <textarea id="symptoms" class="form-textarea-modern" placeholder="Ex: Fever, cough, dizziness..." maxlength="500"></textarea>
+            </div>
+
+            <div class="form-row-modern">
+              <div class="form-group-modern">
+                <label class="form-label-modern"><i class="fas fa-thermometer-half"></i> Severity</label>
+                <select id="severity" class="form-select-modern">
+                  <option value="">Select severity</option>
+                  <option value="mild">Mild</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="severe">Severe</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </div>
+
+              <div class="form-group-modern">
+                <label class="form-label-modern"><i class="fas fa-clock"></i> Duration</label>
+                <select id="duration" class="form-select-modern">
+                  <option value="">How long?</option>
+                  <option value="hours">A few hours</option>
+                  <option value="days">1–3 days</option>
+                  <option value="week">About a week</option>
+                  <option value="weeks">Several weeks</option>
+                  <option value="months">Months+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="button" id="startBtn" class="btn">Start My Care Journey →</button>
+            <button type="button" id="resetBtn" class="btn outline" style="margin-left:8px">New Journey</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- Summaries (appear after intake) -->
+      <section id="summaries" class="section hidden">
+        <h2>Summary</h2>
+        <div class="summary-grid">
+
+          <div class="card summary-card">
+            <div class="title"><i class="fa-solid fa-shield-heart"></i> Insurance Coverage</div>
+            <p class="small" id="covLine">—</p>
+            <div class="actions" style="margin-top:8px">
+              <a class="btn" href="insurance.html">View details →</a>
+            </div>
+          </div>
+
+          <div class="card summary-card">
+            <div class="title"><i class="fa-solid fa-user-doctor"></i> Providers</div>
+            <p class="small" id="provLine">—</p>
+            <div id="provList" class="small" style="margin-top:6px"></div>
+            <div class="actions" style="margin-top:8px">
+              <a class="btn" href="providers.html">View details →</a>
+            </div>
+          </div>
+
+          <div class="card summary-card">
+            <div class="title"><i class="fa-solid fa-prescription-bottle-medical"></i> Pharmacies</div>
+            <div id="pharmList" class="small">—</div>
+            <div class="actions" style="margin-top:8px">
+              <a class="btn" href="pharmacy.html">View details →</a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/state.js?v=1"></script>
+  <script src="assets/js/mock-data.js?v=3"></script>
+
+  <script>
+    // Simple demo pharmacies
+    const MOCK_PHARMACIES = [
+      { name: "Walgreens", price: "$12", eta: "Ready in 1 hr", distance: "0.8 mi" },
+      { name: "CVS Pharmacy", price: "$14", eta: "Ready in 2 hrs", distance: "1.2 mi" },
+      { name: "Rite Aid", price: "$11", eta: "Ready today",   distance: "2.0 mi" }
+    ];
+
+    const $ = (id)=>document.getElementById(id);
+    const updateProgress = (done)=> {
+      $("progressFill").style.width = Math.min(done*25,100) + "%"; // 4 steps total
+      $("stepsDone").textContent = String(done);
+    };
+
+    function renderSummaries(state){
+      const cov = (typeof MOCK_COVERAGE_PLUS === 'function')
+        ? (state?.results?.coverage || MOCK_COVERAGE_PLUS())
+        : (state?.results?.coverage || MOCK_COVERAGE());
+
+      const docs = (state?.results?.doctors) || MOCK_DOCTORS;
+      const pharms = (state?.results?.pharmacies) || MOCK_PHARMACIES;
+
+      $("covLine").textContent = `${cov.plan} • ${cov.service} • ${cov.covered ? 'Covered' : 'Not covered'} • Copay ${cov.copay}`;
+      $("provLine").textContent = `${docs.length} in-network match${docs.length!==1?'es':''}`;
+      $("provList").innerHTML = docs.slice(0,3).map(d=>`${d.name} — ${d.specialty} (${d.distance} mi)`).join("<br>");
+      $("pharmList").innerHTML = pharms.slice(0,3).map(p=>`${p.name}: ${p.price} • ${p.eta} • ${p.distance}`).join("<br>");
+
+      $("summaries").classList.remove("hidden");
+      updateProgress(4); // intake + 3 agents summarized
+    }
+
+    function startJourney(){
+      const symptoms = $("symptoms").value.trim();
+      const severity = $("severity").value;
+      const duration = $("duration").value;
+
+      // minimal validation for demo
+      if (!symptoms) {
+        alert("Please enter a brief symptom description.");
+        return;
+      }
+
+      const coverage = (typeof MOCK_COVERAGE_PLUS === 'function')
+        ? MOCK_COVERAGE_PLUS("Cigna PPO","Specialist Visit")
+        : MOCK_COVERAGE("Cigna PPO","Specialist Visit");
+
+      // Persist journey state for other pages
+      NC.setState({
+        symptoms, severity, duration,
+        results: {
+          doctors: MOCK_DOCTORS,         // swap to filtered list if you implement filtering here
+          coverage,
+          pharmacies: MOCK_PHARMACIES
+        }
+      });
+
+      renderSummaries(NC.state);
+    }
+
+    function resetJourney(){
+      NC.clearState();
+      $("symptomForm").reset();
+      $("summaries").classList.add("hidden");
+      updateProgress(0);
+    }
+
+    // Wire up buttons
+    $("startBtn").onclick = startJourney;
+    $("resetBtn").onclick = resetJourney;
+
+    // Restore if a journey exists
+    if (NC.state?.symptoms) {
+      $("symptoms").value = NC.state.symptoms || '';
+      $("severity").value = NC.state.severity || '';
+      $("duration").value = NC.state.duration || '';
+      renderSummaries(NC.state);
+    } else {
+      updateProgress(0);
+    }
+  </script>
 </body>
 </html>

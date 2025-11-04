@@ -1,0 +1,8 @@
+.nc-header{background:#0c2b33}
+.nc-bar{display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;text-decoration:none;color:#fff;padding:14px 0}
+.nc-nav{display:flex;gap:12px;margin-left:auto}
+.nc-nav a{color:#d7ecf0;text-decoration:none;padding:8px 10px;border-radius:10px}
+.nc-nav a.active,.nc-nav a:hover{background:#14505e;color:#fff}
+main.container{padding:20px 20px}
+footer{opacity:.7;padding:20px 0;margin-top:30px}

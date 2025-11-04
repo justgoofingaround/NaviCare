@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NaviCare • Insurance</title>
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    .plan-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-weight:600;background:rgba(255,255,255,.06)}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .small-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .small-table td{padding:6px 4px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .small-table td:first-child{opacity:.8}
+    .empty{display:flex;flex-direction:column;gap:6px}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="nc-header">
+    <div class="container">
+      <div class="nc-bar">
+        <a class="brand" href="dashboard.html">🩺 NaviCare</a>
+        <nav class="nc-nav">
+          <a href="dashboard.html">Intake</a>
+          <a href="providers.html">Providers</a>
+          <a href="insurance.html" class="active">Insurance</a>
+          <a href="pharmacy.html">Pharmacy</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="small">Welcome, <b>test_user</b></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1>Insurance Coverage</h1>
+      <p class="small">Review your health plan details and coverage information.</p>
+    </section>
+
+    <section id="plan-section" class="section card">
+      <h2>Plan Summary</h2>
+      <div id="plan-info" class="plan-grid"></div>
+    </section>
+
+    <section id="details-section" class="section card">
+      <h2>Coverage Details</h2>
+      <table class="small-table" id="coverage-table"></table>
+    </section>
+
+    <!-- Empty-state -->
+    <section class="section card" id="empty-state" style="display:none">
+      <div class="empty">
+        <h2>No active journey</h2>
+        <p class="small">Start with Intake to load your insurance details.</p>
+        <div class="actions">
+          <button class="btn" onclick="location.href='dashboard.html'">Go to Intake</button>
+          <a class="btn outline" href="providers.html">View Providers</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container small">© NaviCare • Demo build</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/state.js?v=1"></script>
+  <script src="assets/js/mock-data.js?v=3"></script>
+
+  <script>
+    const planInfo = document.getElementById('plan-info');
+    const coverageTable = document.getElementById('coverage-table');
+    const emptyState = document.getElementById('empty-state');
+
+    function renderCoverage(cov){
+      planInfo.innerHTML = `
+        <div class="card small">
+          <h3>${cov.plan}</h3>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-id-card"></i>${cov.memberId}</span>
+            <span class="pill"><i class="fa-solid fa-suitcase-medical"></i>${cov.planType}</span>
+            <span class="pill"><i class="fa-solid fa-circle-info"></i>${cov.tier}</span>
+          </div>
+          <p class="small" style="margin-top:6px">Effective: ${cov.effectiveDate}</p>
+          <p class="small">${cov.service} — ${cov.covered ? "✅ Covered" : "❌ Not covered"} (${cov.copay} copay)</p>
+        </div>
+      `;
+
+      const rows = [
+        ["Deductible Remaining", cov.deductibleRemaining],
+        ["Coinsurance", cov.coinsurance],
+        ["Out-of-Pocket Max", cov.oopMax],
+        ["PCP Copay", cov.pcpCopay],
+        ["Specialist Copay", cov.specialistCopay],
+        ["Telehealth Copay", cov.telehealthCopay],
+        ["ER Copay", cov.erCopay],
+        ["Urgent Care Copay", cov.urgentCareCopay],
+        ["Imaging", cov.imagingCost],
+        ["Labs", cov.labCost],
+        ["Preventive Care", cov.preventiveCareCovered],
+        ["Mental Health", cov.mentalHealthCopay],
+        ["Rehab Therapy Limit", cov.rehabTherapyLimit],
+        ["Chiropractic Limit", cov.chiropracticLimit],
+        ["Referral Required", cov.referralRequired ? "Yes" : "No"],
+        ["Out-of-Network Coverage", cov.outOfNetworkCoverage]
+      ];
+
+      coverageTable.innerHTML = rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('') +
+        `<tr><td colspan="2" style="padding-top:10px;opacity:.8"><b>Notes:</b><br>${cov.notes.map(n=>"• "+n).join("<br>")}</td></tr>`;
+    }
+
+    function loadCoverage(){
+      const cov = (NC?.state?.results?.coverage) || (typeof MOCK_COVERAGE_PLUS === 'function' ? MOCK_COVERAGE_PLUS() : MOCK_COVERAGE());
+      renderCoverage(cov);
+    }
+
+    // render or empty
+    if (NC && NC.requireIntake && NC.requireIntake()) {
+      loadCoverage();
+    } else {
+      emptyState.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

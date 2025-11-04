@@ -1,0 +1,10 @@
+.card{background:var(--nc-card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+.btn{background:linear-gradient(90deg,var(--nc-teal),var(--nc-blue));border:0;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+.input, select{background:#09303a;border:1px solid #0e4d5b;color:#d7ecf0;border-radius:10px;padding:10px;width:100%}
+.row{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.col-12{grid-column:span 12}
+.col-6{grid-column:span 6}
+.col-4{grid-column:span 4}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0e4d5b;color:#bfe9f1;font-size:.8rem}
+.small{font-size:.9rem;color:var(--nc-muted)}

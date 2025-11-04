@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NaviCare • Pharmacy</title>
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .pill{display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:4px 10px;font-weight:600;background:rgba(255,255,255,.06)}
+    .grid.pharms{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .card .actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .empty{display:flex;flex-direction:column;gap:6px}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="nc-header">
+    <div class="container">
+      <div class="nc-bar">
+        <a class="brand" href="dashboard.html">🩺 NaviCare</a>
+        <nav class="nc-nav">
+          <a href="dashboard.html">Intake</a>
+          <a href="providers.html">Providers</a>
+          <a href="insurance.html">Insurance</a>
+          <a href="pharmacy.html" class="active">Pharmacy</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="small">Welcome, <b>test_user</b></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1>Pharmacy Options</h1>
+      <p class="small">Compare local pharmacies for cost and convenience.</p>
+    </section>
+
+    <!-- Filters -->
+    <section class="section card">
+      <div class="filters">
+        <input id="qName" class="input" placeholder="Pharmacy name (e.g. CVS)" />
+        <select id="qSort" class="input">
+          <option value="price">Sort by: Price</option>
+          <option value="distance">Sort by: Distance</option>
+          <option value="eta">Sort by: Pickup time</option>
+        </select>
+      </div>
+      <div class="toolbar" style="margin-top:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button id="btnSearch" class="btn">Apply</button>
+        <button id="btnReset" class="btn outline">Reset</button>
+        <span id="count" class="small muted" style="margin-left:auto"></span>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="section">
+      <div id="pharm-results" class="grid pharms"></div>
+    </section>
+
+    <!-- Empty-state -->
+    <section class="section card" id="empty-state" style="display:none">
+      <div class="empty">
+        <h2>No active journey</h2>
+        <p class="small">Start with Intake to view personalized pharmacy matches.</p>
+        <div class="actions">
+          <button class="btn" onclick="location.href='dashboard.html'">Go to Intake</button>
+          <a class="btn outline" href="providers.html">View Providers</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container small">© NaviCare • Demo build</div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/state.js?v=1"></script>
+  <script src="assets/js/mock-data.js?v=3"></script>
+
+  <script>
+    // Fallback mock pharmacies if no journey yet
+    const MOCK_PHARMACIES = [
+      { name: "Walgreens", price: "$12", eta: "Ready in 1 hr", distance: 0.8 },
+      { name: "CVS Pharmacy", price: "$14", eta: "Ready in 2 hrs", distance: 1.2 },
+      { name: "Rite Aid", price: "$11", eta: "Ready today", distance: 2.0 },
+      { name: "Costco Pharmacy", price: "$9", eta: "Tomorrow", distance: 3.4 }
+    ];
+
+    const JOURNEY_PHARMS = (window.NC?.state?.results?.pharmacies) || null;
+    const BASE_LIST = JOURNEY_PHARMS || MOCK_PHARMACIES;
+
+    const elResults = document.getElementById('pharm-results');
+    const elCount   = document.getElementById('count');
+    const elEmpty   = document.getElementById('empty-state');
+    const controls = {
+      name: document.getElementById('qName'),
+      sort: document.getElementById('qSort'),
+      search: document.getElementById('btnSearch'),
+      reset: document.getElementById('btnReset')
+    };
+
+    function render(list){
+      elResults.innerHTML = list.map(p=>`
+        <div class="card">
+          <h3>${p.name}</h3>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-dollar-sign"></i>${p.price}</span>
+            <span class="pill"><i class="fa-solid fa-clock"></i>${p.eta}</span>
+            <span class="pill"><i class="fa-solid fa-location-dot"></i>${p.distance} mi</span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="insurance.html">Check Coverage</a>
+            <a class="btn outline" href="#" onclick="alert('Directions to ${p.name}...');return false;">Get Directions</a>
+          </div>
+        </div>
+      `).join('');
+      elCount.textContent = `${list.length} result${list.length!==1?'s':''}`;
+    }
+
+    function applyFilters(){
+      const nameQ = controls.name.value.trim().toLowerCase();
+      let list = BASE_LIST.filter(p => !nameQ || p.name.toLowerCase().includes(nameQ));
+
+      const sortBy = controls.sort.value;
+      list.sort((a,b)=>{
+        if(sortBy==='distance') return a.distance - b.distance;
+        if(sortBy==='eta') return a.eta.localeCompare(b.eta);
+        if(sortBy==='price'){
+          const n1=parseFloat(a.price.replace(/[^0-9.]/g,''))||0;
+          const n2=parseFloat(b.price.replace(/[^0-9.]/g,''))||0;
+          return n1-n2;
+        }
+        return 0;
+      });
+      render(list);
+    }
+
+    controls.search.onclick = applyFilters;
+    controls.reset.onclick = ()=>{controls.name.value='';controls.sort.value='price';applyFilters();};
+
+    // initial render
+    applyFilters();
+
+    // empty-state if no intake
+    if (!(NC && NC.requireIntake && NC.requireIntake())) {
+      elEmpty.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
