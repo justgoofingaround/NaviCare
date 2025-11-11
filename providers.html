@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NaviCare • Providers</title>
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+    .muted{color:var(--nc-muted);font-size:.9rem}
+    .pill{display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:4px 10px;font-weight:600;background:rgba(255,255,255,.06)}
+    .grid.providers{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .card .actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .empty{display:flex;flex-direction:column;gap:6px}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="nc-header">
+    <div class="container">
+      <div class="nc-bar">
+        <a class="brand" href="dashboard.html">🩺 NaviCare</a>
+        <nav class="nc-nav">
+          <a href="dashboard.html">Intake</a>
+          <a href="providers.html" class="active">Providers</a>
+          <a href="insurance.html">Insurance</a>
+          <a href="pharmacy.html">Pharmacy</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="small">Welcome, <b>test_user</b></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <h1>Find Providers</h1>
+      <p class="small">Search in-network doctors by specialty, distance, and quality.</p>
+    </section>
+
+    <!-- Filters -->
+    <section class="section card">
+      <div class="filters">
+        <input id="qSpec" class="input" placeholder="Specialty (e.g., Cardiology)" />
+        <input id="qLoc" class="input" placeholder="City or ZIP (demo only)" />
+        <select id="qSort" class="input">
+          <option value="distance">Sort by: Distance</option>
+          <option value="rating">Sort by: Rating</option>
+          <option value="name">Sort by: Name</option>
+        </select>
+        <select id="qDist" class="input">
+          <option value="5">Within 5 miles</option>
+          <option value="10">Within 10 miles</option>
+          <option value="25" selected>Within 25 miles</option>
+          <option value="100">Any distance</option>
+        </select>
+      </div>
+      <div class="toolbar">
+        <label class="small"><input id="qInNet" type="checkbox" checked /> In-network only</label>
+        <button id="btnSearch" class="btn">Apply</button>
+        <button id="btnReset" class="btn outline">Reset</button>
+        <span id="count" class="muted" style="margin-left:auto"></span>
+      </div>
+    </section>
+
+    <!-- Results -->
+    <section class="section">
+      <div id="provider-results" class="grid providers"></div>
+    </section>
+
+    <!-- Empty-state (injected when no intake yet) -->
+    <section class="section card" id="empty-state" style="display:none">
+      <div class="empty">
+        <h2>No active journey</h2>
+        <p class="small">Start with Intake to see tailored matches based on your symptoms and insurance.</p>
+        <div class="actions">
+          <button class="btn" onclick="location.href='dashboard.html'">Go to Intake</button>
+          <a class="btn outline" href="insurance.html">View Insurance</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container small">© NaviCare • Demo build</div>
+  </footer>
+
+  <!-- Shared scripts first -->
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/state.js?v=1"></script>
+  <script src="assets/js/mock-data.js?v=1"></script>
+  <!-- Optional helper renderer if you created it earlier -->
+  <script src="assets/js/ui.js?v=1"></script>
+
+  <!-- Page logic -->
+  <script>
+    // Prefer journey providers if user completed intake; else use mock list
+    const JOURNEY_LIST = (window.NC && NC.state && NC.state.results && NC.state.results.doctors) || null;
+    const BASE_LIST = JOURNEY_LIST || (typeof MOCK_DOCTORS !== 'undefined' ? MOCK_DOCTORS : []);
+
+    const elResults = document.getElementById('provider-results');
+    const elCount   = document.getElementById('count');
+    const elEmpty   = document.getElementById('empty-state');
+
+    const controls = {
+      spec: document.getElementById('qSpec'),
+      dist: document.getElementById('qDist'),
+      inNet: document.getElementById('qInNet'),
+      sort: document.getElementById('qSort'),
+      search: document.getElementById('btnSearch'),
+      reset: document.getElementById('btnReset')
+    };
+
+    function fallbackRender(list){
+      // Use UI helper if available; else simple cards
+      if (typeof renderProviders === 'function') {
+        renderProviders(elResults, list);
+        return;
+      }
+      elResults.innerHTML = list.map(d => `
+        <div class="card">
+          <h3>${d.name}</h3>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-user-doctor"></i>${d.specialty}</span>
+            <span class="pill"><i class="fa-solid fa-location-dot"></i>${d.distance} mi</span>
+            <span class="pill"><i class="fa-solid fa-star"></i>${d.rating}</span>
+            <span class="pill"><i class="fa-solid fa-shield"></i>${d.inNetwork ? 'In-network' : 'OON'}</span>
+          </div>
+          <p class="small" style="margin-top:6px">${d.address}</p>
+          <div class="actions">
+            <a class="btn" href="insurance.html">Check Coverage</a>
+            <a class="btn outline" href="#" onclick="navigator.clipboard.writeText('${d.address}');return false;">Copy Address</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function applyFilters(){
+      const spec = controls.spec.value.trim().toLowerCase();
+      const maxDist = parseFloat(controls.dist.value);
+      const wantInNet = controls.inNet.checked;
+      const sortBy = controls.sort.value;
+
+      let list = BASE_LIST.filter(d => {
+        const okSpec = !spec || d.specialty.toLowerCase().includes(spec);
+        const okDist = isFinite(maxDist) ? (d.distance <= maxDist || maxDist === 100) : true;
+        const okNet  = !wantInNet || d.inNetwork;
+        return okSpec && okDist && okNet;
+      });
+
+      list.sort((a,b) => {
+        if (sortBy === 'rating') return b.rating - a.rating;
+        if (sortBy === 'name')   return a.name.localeCompare(b.name);
+        return a.distance - b.distance; // distance default
+      });
+
+      elCount.textContent = `${list.length} result${list.length!==1?'s':''}`;
+      fallbackRender(list);
+    }
+
+    controls.search.onclick = applyFilters;
+    controls.reset.onclick = () => {
+      controls.spec.value = '';
+      controls.dist.value = '25';
+      controls.inNet.checked = true;
+      controls.sort.value = 'distance';
+      applyFilters();
+    };
+
+    // Initial render
+    applyFilters();
+
+    // Show empty-state banner if no intake yet
+    if (!(NC && NC.requireIntake && NC.requireIntake())) {
+      elEmpty.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

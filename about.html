@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About • NaviCare</title>
+
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    .about-hero{text-align:center;margin-top:40px;margin-bottom:30px}
+    .about-hero h1{font-size:2.2rem;margin-bottom:10px}
+    .about-hero p{opacity:.8;max-width:600px;margin:auto}
+    .grid-2{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:40px}
+    .team-card{text-align:center;padding:20px}
+    .team-card i{font-size:2rem;margin-bottom:10px;color:var(--nc-light)}
+    .tag{display:inline-block;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.08);margin-top:4px;font-size:.8rem}
+    .values{margin-top:50px}
+    .values h2{margin-bottom:10px}
+    .values p{opacity:.85;max-width:700px}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="nc-header">
+    <div class="container">
+      <div class="nc-bar">
+        <a class="brand" href="dashboard.html">🩺 NaviCare</a>
+        <nav class="nc-nav">
+          <a href="dashboard.html">Intake</a>
+          <a href="providers.html">Providers</a>
+          <a href="insurance.html">Insurance</a>
+          <a href="pharmacy.html">Pharmacy</a>
+          <a href="about.html" class="active">About</a>
+        </nav>
+        <div class="small">Welcome, <b>test_user</b></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="about-hero">
+      <h1>About NaviCare</h1>
+      <p>
+        NaviCare is an AI-powered healthcare navigation platform designed to make the patient experience seamless.
+        Our multi-agent system helps you find the right care, understand your insurance, and access treatment faster.
+      </p>
+    </section>
+
+    <section class="grid-2">
+      <div class="card team-card">
+        <i class="fa-solid fa-robot"></i>
+        <h3>Intelligent Agents</h3>
+        <p class="small">
+          Each AI agent specializes in a different aspect of care — from insurance verification to doctor and pharmacy matching.
+        </p>
+      </div>
+
+      <div class="card team-card">
+        <i class="fa-solid fa-users-gear"></i>
+        <h3>Collaborative Workflow</h3>
+        <p class="small">
+          The agents coordinate automatically, ensuring a unified care plan with no conflicting recommendations.
+        </p>
+      </div>
+
+      <div class="card team-card">
+        <i class="fa-solid fa-shield-heart"></i>
+        <h3>Privacy First</h3>
+        <p class="small">
+          NaviCare is built with HIPAA-conscious design principles and secure data handling at every step.
+        </p>
+      </div>
+
+      <div class="card team-card">
+        <i class="fa-solid fa-lightbulb"></i>
+        <h3>Future Vision</h3>
+        <p class="small">
+          We're developing integrations for telehealth, prescription management, and automated appointment scheduling.
+        </p>
+      </div>
+    </section>
+
+    <section class="values">
+      <h2>Our Values</h2>
+      <p>
+        We believe healthcare should be simple, transparent, and human-centered. NaviCare merges advanced AI
+        with compassion — empowering patients to make informed decisions without stress or confusion.
+      </p>
+    </section>
+
+    <section class="section" style="margin-top:50px">
+      <h2>Contact & Support</h2>
+      <p class="small">For demo feedback or collaboration inquiries, reach out at <b>team@navicare.ai</b>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container small">© NaviCare • 2025 • Made with ❤️ by the team</div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
