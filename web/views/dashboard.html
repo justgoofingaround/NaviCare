@@ -24,6 +24,34 @@
     .progress-mini{height:8px;background:rgba(255,255,255,.08);border-radius:8px;overflow:hidden}
     .progress-mini > span{display:block;height:100%;background:linear-gradient(90deg,var(--nc-teal),var(--nc-light))}
     .hidden{display:none}
+    
+    /* AI Insights Styling */
+    .alert { padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 8px; }
+    .alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+    .alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeaa7; }
+    .badge { display: inline-block; padding: 0.25em 0.4em; font-size: 75%; font-weight: 700; line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 0.25rem; }
+    .badge-info { color: #fff; background-color: #17a2b8; }
+    .badge-danger { color: #fff; background-color: #dc3545; }
+    .badge-warning { color: #212529; background-color: #ffc107; }
+    .badge-success { color: #fff; background-color: #28a745; }
+    .card { position: relative; display: flex; flex-direction: column; min-width: 0; background-color: #fff; background-clip: border-box; border: 1px solid rgba(0,0,0,.125); border-radius: 0.5rem; margin-bottom: 1rem; }
+    .card-body { flex: 1 1 auto; padding: 1rem; }
+    .card-title { margin-bottom: 0.5rem; font-size: 1.1rem; font-weight: 600; }
+    .card-text { margin-bottom: 0.75rem; }
+    .bg-light { background-color: #f8f9fa !important; }
+    .text-center { text-align: center !important; }
+    .text-muted { color: #6c757d !important; }
+    .text-success { color: #28a745 !important; }
+    .mb-0 { margin-bottom: 0 !important; }
+    .mb-1 { margin-bottom: 0.25rem !important; }
+    .mb-2 { margin-bottom: 0.5rem !important; }
+    .mb-3 { margin-bottom: 1rem !important; }
+    .mb-4 { margin-bottom: 1.5rem !important; }
+    .d-flex { display: flex !important; }
+    .justify-content-between { justify-content: space-between !important; }
+    .row { display: flex; flex-wrap: wrap; margin: -0.5rem; }
+    .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; padding: 0.5rem; }
+    @media (max-width: 768px) { .col-md-4 { flex: 0 0 100%; max-width: 100%; } }
   </style>
 </head>
 <body>
@@ -62,6 +90,52 @@
           </div>
           <div class="col-3 small" style="text-align:right">
             <span id="stepsDone">0</span> / <span>4</span> steps
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Agent Insurance Insights (Hidden - Integrated into Insurance Coverage) -->
+      <section id="ai-insights" class="section card" style="display:none;">
+        <div class="card-header-modern">
+          <div class="header-icon"><i class="fas fa-robot"></i></div>
+          <div class="header-content">
+            <h3 class="card-title-modern">AI Insurance Agent Insights</h3>
+            <p class="card-subtitle">Intelligent analysis of your insurance coverage and recommendations.</p>
+          </div>
+        </div>
+
+        <div class="card-body-modern">
+          <div id="ai-loading" class="text-center" style="padding: 20px;">
+            <i class="fas fa-spinner fa-spin"></i> Analyzing your insurance data...
+          </div>
+          
+          <div id="ai-content" style="display:none">
+            <!-- Agent Info -->
+            <div id="agent-info" class="mb-3"></div>
+            
+            <!-- Executive Summary -->
+            <div id="executive-summary-section" class="mb-4">
+              <h4><i class="fas fa-chart-pie"></i> Executive Summary</h4>
+              <div id="executive-summary" class="alert alert-primary"></div>
+            </div>
+            
+            <!-- Insights -->
+            <div id="insights-section" class="mb-4">
+              <h4><i class="fas fa-lightbulb"></i> Key Insights</h4>
+              <div id="insights-list"></div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div id="recommendations-section" class="mb-4">
+              <h4><i class="fas fa-star"></i> Recommendations</h4>
+              <div id="recommendations-list"></div>
+            </div>
+            
+            <!-- Performance Metrics -->
+            <div id="performance-section">
+              <h4><i class="fas fa-chart-line"></i> Performance Overview</h4>
+              <div id="performance-metrics"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -122,6 +196,21 @@
           <div class="card summary-card">
             <div class="title"><i class="fa-solid fa-shield-heart"></i> Insurance Coverage</div>
             <p class="small" id="covLine">—</p>
+            
+            <!-- AI Summary Section -->
+            <div id="ai-summary-section" style="display:none; margin-top: 12px; padding: 8px; background: #f8f9fa; border-radius: 4px; border-left: 3px solid #007bff;">
+              <div id="ai-summary-loading" style="display:none;">
+                <i class="fas fa-spinner fa-spin"></i> <small>Analyzing coverage...</small>
+              </div>
+              <div id="ai-summary-content">
+                <div style="font-weight: 600; color: #007bff; font-size: 0.85em; margin-bottom: 4px;">
+                  <i class="fas fa-robot"></i> AI Agent Insights
+                </div>
+                <div id="ai-executive-summary" class="small" style="margin-bottom: 6px;"></div>
+                <div id="ai-key-insight" class="small text-muted"></div>
+              </div>
+            </div>
+            
             <div class="actions" style="margin-top:8px">
               <a class="btn" href="insurance.html">View details →</a>
             </div>
@@ -150,10 +239,11 @@
     </div>
   </main>
 
-  <!-- Scripts -->
+  <!-- Shared scripts first -->
   <script src="../js/app.js"></script>
   <script src="../js/state.js?v=1"></script>
   <script src="../js/mock-data.js?v=3"></script>
+  <script src="../js/api-service.js?v=7"></script>
 
   <script>
     // Simple demo pharmacies
@@ -164,20 +254,54 @@
     ];
 
     const $ = (id)=>document.getElementById(id);
+    
+    // NaviCare State Management
+    const NC = {
+      state: {},
+      setState: function(newState) {
+        this.state = {...this.state, ...newState};
+        localStorage.setItem('navicare_state', JSON.stringify(this.state));
+      },
+      clearState: function() {
+        this.state = {};
+        localStorage.removeItem('navicare_state');
+      },
+      loadState: function() {
+        const saved = localStorage.getItem('navicare_state');
+        this.state = saved ? JSON.parse(saved) : {};
+      }
+    };
+    
+    // Load saved state
+    NC.loadState();
+    
     const updateProgress = (done)=> {
       $("progressFill").style.width = Math.min(done*25,100) + "%"; // 4 steps total
       $("stepsDone").textContent = String(done);
     };
 
     function renderSummaries(state){
-      const cov = (typeof MOCK_COVERAGE_PLUS === 'function')
-        ? (state?.results?.coverage || MOCK_COVERAGE_PLUS())
-        : (state?.results?.coverage || MOCK_COVERAGE());
+      // Get coverage data - prioritize from state, fallback to mock
+      let cov = state?.results?.coverage;
+      if (!cov) {
+        cov = (typeof MOCK_COVERAGE_PLUS === 'function')
+          ? MOCK_COVERAGE_PLUS()
+          : MOCK_COVERAGE();
+      }
+      
+      console.log('📋 Coverage object:', cov);
 
       const docs = (state?.results?.doctors) || MOCK_DOCTORS;
       const pharms = (state?.results?.pharmacies) || MOCK_PHARMACIES;
 
-      $("covLine").textContent = `${cov.plan} • ${cov.service} • ${cov.covered ? 'Covered' : 'Not covered'} • Copay ${cov.copay}`;
+      // Ensure coverage object has required properties
+      if (cov && cov.plan && cov.service) {
+        $("covLine").textContent = `${cov.plan} • ${cov.service} • ${cov.covered ? 'Covered' : 'Not covered'} • Copay ${cov.copay}`;
+      } else {
+        console.log('❌ Invalid coverage object, using fallback');
+        $("covLine").textContent = "Coverage information unavailable";
+      }
+      
       $("provLine").textContent = `${docs.length} in-network match${docs.length!==1?'es':''}`;
       $("provList").innerHTML = docs.slice(0,3).map(d=>`${d.name} — ${d.specialty} (${d.distance} mi)`).join("<br>");
       $("pharmList").innerHTML = pharms.slice(0,3).map(p=>`${p.name}: ${p.price} • ${p.eta} • ${p.distance}`).join("<br>");
@@ -187,31 +311,176 @@
     }
 
     function startJourney(){
-      const symptoms = $("symptoms").value.trim();
-      const severity = $("severity").value;
-      const duration = $("duration").value;
+      const symptoms = $("symptoms");
+      const severity = $("severity"); 
+      const duration = $("duration");
+      
+      if (!symptoms || !severity || !duration) {
+        alert("Form elements not found. Please refresh the page.");
+        return;
+      }
+      
+      const symptomsValue = symptoms.value.trim();
+      const severityValue = severity.value;
+      const durationValue = duration.value;
 
       // minimal validation for demo
-      if (!symptoms) {
+      if (!symptomsValue) {
         alert("Please enter a brief symptom description.");
         return;
       }
 
-      const coverage = (typeof MOCK_COVERAGE_PLUS === 'function')
-        ? MOCK_COVERAGE_PLUS("Cigna PPO","Specialist Visit")
-        : MOCK_COVERAGE("Cigna PPO","Specialist Visit");
+      // Start the journey with API calls
+      startJourneyWithAPI(symptomsValue, severityValue, durationValue);
+    }
+
+    function resetJourney() {
+      // Clear form
+      if ($("symptoms")) $("symptoms").value = '';
+      if ($("severity")) $("severity").value = 'mild';
+      if ($("duration")) $("duration").value = 'days';
+      
+      // Hide summaries
+      $("summaries").classList.add("hidden");
+      
+      // Reset progress
+      updateProgress(0);
+      
+      // Clear state
+      NC.clearState();
+      
+      // Clear AI summary
+      const aiSummarySection = $("ai-summary-section");
+      if (aiSummarySection) {
+        aiSummarySection.style.display = "none";
+      }
+    }
+
+    async function startJourneyWithAPI(symptoms, severity, duration) {
+      // Show loading state
+      $("startBtn").disabled = true;
+      $("startBtn").textContent = "Loading...";
+
+      console.log('🚀 Starting journey - Loading insurance data from Django backend...');
+      
+      // Try to load insurance data from Django backend
+      let coverage = null;
+      let usingRealInsuranceData = false;
+      
+      try {
+        // Direct API call to Django backend for insurance data
+        console.log('🏥 Checking Django backend health...');
+        const healthResponse = await fetch('http://localhost:8001/api/health/');
+        
+        if (healthResponse.ok) {
+          console.log('✅ Django backend is healthy');
+          
+          // Get insurance plans
+          console.log('📋 Fetching insurance plans from Django...');
+          const plansResponse = await fetch('http://localhost:8001/api/plans/');
+          
+          if (plansResponse.ok) {
+            const plansData = await plansResponse.json();
+            console.log('📊 Plans API response:', plansData);
+            
+            // Handle paginated response
+            const plans = plansData.results || plansData;
+            console.log('📊 Extracted plans:', plans.length, 'plans found');
+            
+            if (plans && plans.length > 0) {
+              const firstPlan = plans[0];
+              console.log('🎯 Using first plan for coverage:', firstPlan);
+              
+              coverage = {
+                plan: `${firstPlan.carrier.name} ${firstPlan.plan_name}`,
+                service: "Specialist Visit", 
+                covered: true,
+                copay: `$${firstPlan.specialist_copay}`,
+                // Additional detailed properties for insurance page
+                memberId: "MEMBER-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                planType: firstPlan.plan_type,
+                tier: firstPlan.tier,
+                effectiveDate: firstPlan.effective_date || new Date().toLocaleDateString(),
+                deductible: `$${firstPlan.annual_deductible}`,
+                deductibleRemaining: `$${firstPlan.annual_deductible}`,
+                coinsurance: `${firstPlan.coinsurance_percentage}%`,
+                oopMax: `$${firstPlan.max_out_of_pocket}`,
+                pcpCopay: `$${firstPlan.pcp_copay}`,
+                specialistCopay: `$${firstPlan.specialist_copay}`,
+                telehealthCopay: `$${firstPlan.pcp_copay}`,
+                erCopay: `$${firstPlan.er_copay}`,
+                urgentCareCopay: `$${firstPlan.urgent_care_copay}`,
+                imagingCost: "Covered after deductible",
+                labCost: "Covered after deductible", 
+                preventiveCareCovered: "100% covered",
+                mentalHealthCopay: `$${firstPlan.specialist_copay}`,
+                rehabTherapyLimit: "20 visits per year",
+                chiropracticLimit: "12 visits per year",
+                referralRequired: firstPlan.requires_referrals,
+                outOfNetworkCoverage: firstPlan.out_of_network_coverage ? "50% after deductible" : "Not covered",
+                notes: [
+                  `${firstPlan.plan_type} plan with ${firstPlan.tier.toLowerCase()} tier coverage`,
+                  `Monthly Premium: $${firstPlan.monthly_premium}`,
+                  `Loaded from Django backend`
+                ]
+              };
+              
+              console.log('✅ Created coverage object:', coverage);
+              usingRealInsuranceData = true;
+              console.log('✅ Successfully loaded real insurance data from Django');
+            } else {
+              console.log('⚠️ No insurance plans found in Django backend');
+            }
+          } else {
+            console.log('❌ Failed to fetch plans from Django:', plansResponse.status, plansResponse.statusText);
+          }
+        } else {
+          console.log('❌ Django backend health check failed:', healthResponse.status, healthResponse.statusText);
+        }
+      } catch (error) {
+        console.log('❌ Error connecting to Django backend:', error.message);
+      }
+
+      // Fallback to mock insurance data if Django backend unavailable
+      if (!usingRealInsuranceData) {
+        console.log('🔄 Django backend unavailable - using mock insurance data');
+        coverage = (typeof MOCK_COVERAGE_PLUS === 'function')
+          ? MOCK_COVERAGE_PLUS("Cigna PPO", "Specialist Visit")
+          : MOCK_COVERAGE("Cigna PPO", "Specialist Visit");
+        
+        // Show warning specifically for insurance data only
+        console.log('⚠️ Showing insurance demo data warning');
+        setTimeout(() => {
+          showInsuranceWarning();
+        }, 500);
+      } else {
+        console.log('✅ Using real insurance data from Django backend - no warning needed');
+      }
+
+      // Use mock data for doctors and pharmacies (no backend implemented for these)
+      const doctors = MOCK_DOCTORS;
+      const pharmacies = MOCK_PHARMACIES;
 
       // Persist journey state for other pages
+      console.log('💾 Storing state with coverage:', coverage);
       NC.setState({
         symptoms, severity, duration,
         results: {
-          doctors: MOCK_DOCTORS,         // swap to filtered list if you implement filtering here
-          coverage,
-          pharmacies: MOCK_PHARMACIES
+          doctors: doctors,
+          coverage: coverage,
+          pharmacies: pharmacies
         }
       });
-
+      
+      console.log('📦 Final state stored:', NC.state);
       renderSummaries(NC.state);
+      
+      // Load AI Agent Insights
+      loadAIAgentInsights();
+      
+      // Re-enable button
+      $("startBtn").disabled = false;
+      $("startBtn").textContent = "Start My Care Journey →";
     }
 
     function resetJourney(){
@@ -221,19 +490,149 @@
       updateProgress(0);
     }
 
-    // Wire up buttons
-    $("startBtn").onclick = startJourney;
-    $("resetBtn").onclick = resetJourney;
+    function showInsuranceWarning() {
+      // Create notification if it doesn't exist
+      if (!document.getElementById('insurance-demo-notification')) {
+        const notification = document.createElement('div');
+        notification.id = 'insurance-demo-notification';
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #ff6b6b;
+          color: white;
+          padding: 15px 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          z-index: 10000;
+          max-width: 300px;
+          font-family: Arial, sans-serif;
+        `;
+        notification.innerHTML = `
+          <div style="font-weight: bold; margin-bottom: 5px;">Using demo insurance data</div>
+          <div style="font-size: 14px;">Django backend unavailable - check if server is running on port 8001</div>
+          <button onclick="this.parentElement.remove()" style="
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+          ">&times;</button>
+        `;
+        document.body.appendChild(notification);
 
-    // Restore if a journey exists
-    if (NC.state?.symptoms) {
-      $("symptoms").value = NC.state.symptoms || '';
-      $("severity").value = NC.state.severity || '';
-      $("duration").value = NC.state.duration || '';
-      renderSummaries(NC.state);
-    } else {
-      updateProgress(0);
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+          if (document.getElementById('insurance-demo-notification')) {
+            notification.remove();
+          }
+        }, 8000);
+      }
     }
+
+    // AI Agent Insights Functions
+    async function loadAIAgentInsights() {
+      // Show the AI summary in Insurance Coverage card
+      const aiSummarySection = $("ai-summary-section");
+      const aiSummaryLoading = $("ai-summary-loading");
+      const aiSummaryContent = $("ai-summary-content");
+      
+      if (aiSummarySection) {
+        aiSummarySection.style.display = "block";
+        aiSummaryLoading.style.display = "block";
+        aiSummaryContent.style.display = "none";
+      } else {
+        return;
+      }
+      
+      try {
+        // Use a sample agent ID (in real app, this would come from user session)
+        const agentId = 'AGT001'; // Default to first agent
+        
+        const response = await fetch(`http://localhost:8001/api/agents/${agentId}/ai-dashboard/`);
+        
+        if (response.ok) {
+          const result = await response.json();
+          
+          if (result.status === 'success' && result.data) {
+            renderAIInsights(result.data);
+          } else {
+            showAIError('Failed to generate insights');
+          }
+        } else {
+          showAIError('AI service unavailable');
+        }
+      } catch (error) {
+        showAIError('Connection error');
+      }
+    }
+
+    function renderAIInsights(data) {
+      // Hide loading spinner and show content
+      const aiSummaryLoading = $("ai-summary-loading");
+      const aiSummaryContent = $("ai-summary-content");
+      
+      if (aiSummaryLoading) aiSummaryLoading.style.display = "none";
+      if (aiSummaryContent) aiSummaryContent.style.display = "block";
+
+      // Render executive summary
+      if (data.executive_summary && $("ai-executive-summary")) {
+        $("ai-executive-summary").innerHTML = data.executive_summary;
+      }
+
+      // Render top key insight
+      if (data.insights && data.insights.length > 0 && $("ai-key-insight")) {
+        const topInsight = data.insights[0];
+        $("ai-key-insight").innerHTML = `💡 ${topInsight.insight}`;
+      }
+    }
+
+    function showAIError(message) {
+      const aiSummaryLoading = $("ai-summary-loading");
+      const aiSummaryContent = $("ai-summary-content");
+      
+      if (aiSummaryLoading) aiSummaryLoading.style.display = "none";
+      if (aiSummaryContent) {
+        aiSummaryContent.innerHTML = `
+          <div style="color: #dc3545; font-size: 0.85em;">
+            <i class="fas fa-exclamation-triangle"></i> ${message}
+            <br><small style="color: #6c757d;">AI agent service unavailable.</small>
+          </div>
+        `;
+        aiSummaryContent.style.display = "block";
+      }
+    }
+
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wire up buttons
+      const startBtn = $("startBtn");
+      const resetBtn = $("resetBtn");
+      
+      if (startBtn) {
+        startBtn.onclick = startJourney;
+      }
+      
+      if (resetBtn) {
+        resetBtn.onclick = resetJourney;
+      }
+
+      // Load AI insights on page load
+      loadAIAgentInsights();
+
+      // Restore if a journey exists
+      if (NC.state?.symptoms) {
+        $("symptoms").value = NC.state.symptoms || '';
+        $("severity").value = NC.state.severity || '';
+        $("duration").value = NC.state.duration || '';
+        renderSummaries(NC.state);
+      } else {
+        updateProgress(0);
+      }
+    });
   </script>
 </body>
 </html>

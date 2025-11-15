@@ -100,14 +100,35 @@
   <script src="../js/app.js"></script>
   <script src="../js/state.js?v=1"></script>
   <script src="../js/mock-data.js?v=1"></script>
+  <script src="../js/api-service.js"></script>
   <!-- Optional helper renderer if you created it earlier -->
   <script src="../js/ui.js?v=1"></script>
 
   <!-- Page logic -->
   <script>
-    // Prefer journey providers if user completed intake; else use mock list
+    // Load providers from API or journey state
     const JOURNEY_LIST = (window.NC && NC.state && NC.state.results && NC.state.results.doctors) || null;
-    const BASE_LIST = JOURNEY_LIST || (typeof MOCK_DOCTORS !== 'undefined' ? MOCK_DOCTORS : []);
+    let BASE_LIST = JOURNEY_LIST || MOCK_DOCTORS;
+
+    // Load providers from API if no journey state
+    if (!JOURNEY_LIST) {
+      loadProvidersFromAPI();
+    }
+
+    async function loadProvidersFromAPI() {
+      try {
+        const providers = await APIService.getProviders();
+        BASE_LIST = providers;
+        render(BASE_LIST);
+        updateCount();
+      } catch (error) {
+        console.error('Error loading providers from API:', error);
+        // Keep using MOCK_DOCTORS as fallback
+        BASE_LIST = MOCK_DOCTORS;
+        render(BASE_LIST);
+        updateCount();
+      }
+    }
 
     const elResults = document.getElementById('provider-results');
     const elCount   = document.getElementById('count');

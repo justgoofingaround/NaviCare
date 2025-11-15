@@ -89,6 +89,7 @@
   <script src="../js/app.js"></script>
   <script src="../js/state.js?v=1"></script>
   <script src="../js/mock-data.js?v=3"></script>
+  <script src="../js/api-service.js"></script>
 
   <script>
     // Fallback mock pharmacies if no journey yet
@@ -100,7 +101,27 @@
     ];
 
     const JOURNEY_PHARMS = (window.NC?.state?.results?.pharmacies) || null;
-    const BASE_LIST = JOURNEY_PHARMS || MOCK_PHARMACIES;
+    let BASE_LIST = JOURNEY_PHARMS || MOCK_PHARMACIES;
+
+    // Load pharmacies from API if no journey state
+    if (!JOURNEY_PHARMS) {
+      loadPharmaciesFromAPI();
+    }
+
+    async function loadPharmaciesFromAPI() {
+      try {
+        const pharmacies = await APIService.getPharmacies({ medication: 'Ibuprofen' });
+        BASE_LIST = pharmacies;
+        render(BASE_LIST);
+        updateCount();
+      } catch (error) {
+        console.error('Error loading pharmacies from API:', error);
+        // Keep using MOCK_PHARMACIES as fallback
+        BASE_LIST = MOCK_PHARMACIES;
+        render(BASE_LIST);
+        updateCount();
+      }
+    }
 
     const elResults = document.getElementById('pharm-results');
     const elCount   = document.getElementById('count');

@@ -78,6 +78,7 @@
   <script src="../js/app.js"></script>
   <script src="../js/state.js?v=1"></script>
   <script src="../js/mock-data.js?v=3"></script>
+  <script src="../js/api-service.js?v=7"></script>
 
   <script>
     const planInfo = document.getElementById('plan-info');
@@ -85,45 +86,185 @@
     const emptyState = document.getElementById('empty-state');
 
     function renderCoverage(cov){
+      console.log('🎨 Rendering coverage in insurance page:', cov);
+      
+      // Ensure we have default values for missing properties
+      const coverage = {
+        plan: cov.plan || 'Unknown Plan',
+        memberId: cov.memberId || 'MEMBER-12345',
+        planType: cov.planType || 'PPO',
+        tier: cov.tier || 'Silver',
+        effectiveDate: cov.effectiveDate || new Date().toLocaleDateString(),
+        service: cov.service || 'Specialist Visit',
+        covered: cov.covered !== undefined ? cov.covered : true,
+        copay: cov.copay || '$30',
+        deductibleRemaining: cov.deductibleRemaining || cov.deductible || '$1,500',
+        coinsurance: cov.coinsurance || '20%',
+        oopMax: cov.oopMax || '$8,000',
+        pcpCopay: cov.pcpCopay || '$25',
+        specialistCopay: cov.specialistCopay || cov.copay || '$50',
+        telehealthCopay: cov.telehealthCopay || '$25',
+        erCopay: cov.erCopay || '$300',
+        urgentCareCopay: cov.urgentCareCopay || '$100',
+        imagingCost: cov.imagingCost || 'Covered after deductible',
+        labCost: cov.labCost || 'Covered after deductible',
+        preventiveCareCovered: cov.preventiveCareCovered || '100% covered',
+        mentalHealthCopay: cov.mentalHealthCopay || '$50',
+        rehabTherapyLimit: cov.rehabTherapyLimit || '20 visits per year',
+        chiropracticLimit: cov.chiropracticLimit || '12 visits per year',
+        referralRequired: cov.referralRequired !== undefined ? cov.referralRequired : false,
+        outOfNetworkCoverage: cov.outOfNetworkCoverage || '50% after deductible',
+        notes: cov.notes || ['Standard coverage plan', 'Contact customer service for details']
+      };
+      
       planInfo.innerHTML = `
         <div class="card small">
-          <h3>${cov.plan}</h3>
+          <h3>${coverage.plan}</h3>
           <div class="meta">
-            <span class="pill"><i class="fa-solid fa-id-card"></i>${cov.memberId}</span>
-            <span class="pill"><i class="fa-solid fa-suitcase-medical"></i>${cov.planType}</span>
-            <span class="pill"><i class="fa-solid fa-circle-info"></i>${cov.tier}</span>
+            <span class="pill"><i class="fa-solid fa-id-card"></i>${coverage.memberId}</span>
+            <span class="pill"><i class="fa-solid fa-suitcase-medical"></i>${coverage.planType}</span>
+            <span class="pill"><i class="fa-solid fa-circle-info"></i>${coverage.tier}</span>
           </div>
-          <p class="small" style="margin-top:6px">Effective: ${cov.effectiveDate}</p>
-          <p class="small">${cov.service} — ${cov.covered ? "✅ Covered" : "❌ Not covered"} (${cov.copay} copay)</p>
+          <p class="small" style="margin-top:6px">Effective: ${coverage.effectiveDate}</p>
+          <p class="small">${coverage.service} — ${coverage.covered ? "✅ Covered" : "❌ Not covered"} (${coverage.copay} copay)</p>
         </div>
       `;
 
       const rows = [
-        ["Deductible Remaining", cov.deductibleRemaining],
-        ["Coinsurance", cov.coinsurance],
-        ["Out-of-Pocket Max", cov.oopMax],
-        ["PCP Copay", cov.pcpCopay],
-        ["Specialist Copay", cov.specialistCopay],
-        ["Telehealth Copay", cov.telehealthCopay],
-        ["ER Copay", cov.erCopay],
-        ["Urgent Care Copay", cov.urgentCareCopay],
-        ["Imaging", cov.imagingCost],
-        ["Labs", cov.labCost],
-        ["Preventive Care", cov.preventiveCareCovered],
-        ["Mental Health", cov.mentalHealthCopay],
-        ["Rehab Therapy Limit", cov.rehabTherapyLimit],
-        ["Chiropractic Limit", cov.chiropracticLimit],
-        ["Referral Required", cov.referralRequired ? "Yes" : "No"],
-        ["Out-of-Network Coverage", cov.outOfNetworkCoverage]
+        ["Deductible Remaining", coverage.deductibleRemaining],
+        ["Coinsurance", coverage.coinsurance],
+        ["Out-of-Pocket Max", coverage.oopMax],
+        ["PCP Copay", coverage.pcpCopay],
+        ["Specialist Copay", coverage.specialistCopay],
+        ["Telehealth Copay", coverage.telehealthCopay],
+        ["ER Copay", coverage.erCopay],
+        ["Urgent Care Copay", coverage.urgentCareCopay],
+        ["Imaging", coverage.imagingCost],
+        ["Labs", coverage.labCost],
+        ["Preventive Care", coverage.preventiveCareCovered],
+        ["Mental Health", coverage.mentalHealthCopay],
+        ["Rehab Therapy Limit", coverage.rehabTherapyLimit],
+        ["Chiropractic Limit", coverage.chiropracticLimit],
+        ["Referral Required", coverage.referralRequired ? "Yes" : "No"],
+        ["Out-of-Network Coverage", coverage.outOfNetworkCoverage]
       ];
 
       coverageTable.innerHTML = rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('') +
-        `<tr><td colspan="2" style="padding-top:10px;opacity:.8"><b>Notes:</b><br>${cov.notes.map(n=>"• "+n).join("<br>")}</td></tr>`;
+        `<tr><td colspan="2" style="padding-top:10px;opacity:.8"><b>Notes:</b><br>${coverage.notes.map(n=>"• "+n).join("<br>")}</td></tr>`;
     }
 
     function loadCoverage(){
-      const cov = (NC?.state?.results?.coverage) || (typeof MOCK_COVERAGE_PLUS === 'function' ? MOCK_COVERAGE_PLUS() : MOCK_COVERAGE());
-      renderCoverage(cov);
+      console.log('📋 Loading coverage data...');
+      console.log('NC state:', NC?.state);
+      
+      // Try to load from stored state first
+      if (NC?.state?.results?.coverage) {
+        console.log('✅ Found coverage in state:', NC.state.results.coverage);
+        renderCoverage(NC.state.results.coverage);
+      } else {
+        console.log('⚠️ No coverage found in state, loading from API...');
+        // Load from API
+        loadCoverageFromAPI();
+      }
+    }
+
+    async function loadCoverageFromAPI() {
+      console.log('🏥 Loading coverage from Django insurance backend...');
+      
+      try {
+        // Direct API call to Django backend for insurance plans
+        const healthResponse = await fetch('http://localhost:8001/api/health/');
+        
+        if (healthResponse.ok) {
+          console.log('✅ Django insurance backend is healthy');
+          
+          const plansResponse = await fetch('http://localhost:8001/api/plans/');
+          
+          if (plansResponse.ok) {
+            const plansData = await plansResponse.json();
+            const plans = plansData.results || plansData;
+            
+            if (plans && plans.length > 0) {
+              const firstPlan = plans[0];
+              console.log('🎯 Using plan for coverage details:', firstPlan);
+              
+              // Convert Django plan data to coverage format
+              const coverage = {
+                plan: `${firstPlan.carrier.name} ${firstPlan.plan_name}`,
+                service: "Specialist Visit",
+                covered: true,
+                copay: `$${firstPlan.specialist_copay}`,
+                memberId: "MEMBER-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                planType: firstPlan.plan_type,
+                tier: firstPlan.tier,
+                effectiveDate: firstPlan.effective_date || new Date().toLocaleDateString(),
+                deductibleRemaining: `$${firstPlan.annual_deductible}`,
+                coinsurance: `${firstPlan.coinsurance_percentage}%`,
+                oopMax: `$${firstPlan.max_out_of_pocket}`,
+                pcpCopay: `$${firstPlan.pcp_copay}`,
+                specialistCopay: `$${firstPlan.specialist_copay}`,
+                telehealthCopay: `$${firstPlan.pcp_copay}`,
+                erCopay: `$${firstPlan.er_copay}`,
+                urgentCareCopay: `$${firstPlan.urgent_care_copay}`,
+                imagingCost: "Covered after deductible",
+                labCost: "Covered after deductible", 
+                preventiveCareCovered: "100% covered",
+                mentalHealthCopay: `$${firstPlan.specialist_copay}`,
+                rehabTherapyLimit: "20 visits per year",
+                chiropracticLimit: "12 visits per year",
+                referralRequired: firstPlan.requires_referrals,
+                outOfNetworkCoverage: firstPlan.out_of_network_coverage ? "50% after deductible" : "Not covered",
+                notes: [
+                  `${firstPlan.plan_type} plan with ${firstPlan.tier.toLowerCase()} tier coverage`,
+                  `Monthly Premium: $${firstPlan.monthly_premium}`,
+                  `Effective Date: ${firstPlan.effective_date || new Date().toLocaleDateString()}`
+                ]
+              };
+              
+              console.log('✅ Successfully loaded real insurance coverage data');
+              renderCoverage(coverage);
+              return;
+            }
+          }
+        }
+        
+        console.log('⚠️ Django backend not available - using mock data');
+        throw new Error('Django backend unavailable');
+        
+      } catch (error) {
+        console.error('Error loading coverage from Django insurance backend:', error);
+        
+        // Show insurance-specific warning since Django backend is specifically for insurance data
+        showInsuranceBackendWarning();
+        
+        // Fallback to mock data
+        const cov = (typeof MOCK_COVERAGE_PLUS === 'function' ? MOCK_COVERAGE_PLUS() : MOCK_COVERAGE());
+        renderCoverage(cov);
+      }
+    }
+
+    function showInsuranceBackendWarning() {
+      const warningMsg = `
+        <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; 
+             border-radius: 8px; padding: 15px; margin: 20px 0; color: #856404;">
+          <h4 style="margin: 0 0 10px 0; color: #856404;">
+            📋 Demo Insurance Data
+          </h4>
+          <p style="margin: 0; font-size: 14px;">
+            Django insurance backend is not running. Using sample coverage data for demonstration.
+            <br><strong>To access real insurance data:</strong> Start the Django backend server.
+          </p>
+        </div>
+      `;
+      
+      // Insert warning at the top of the main content
+      const mainContent = document.querySelector('.coverage-view') || document.body;
+      if (mainContent && !document.querySelector('.insurance-demo-warning')) {
+        const warningDiv = document.createElement('div');
+        warningDiv.className = 'insurance-demo-warning';
+        warningDiv.innerHTML = warningMsg;
+        mainContent.insertBefore(warningDiv, mainContent.firstChild);
+      }
     }
 
     // render or empty
