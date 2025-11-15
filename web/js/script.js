@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Redirect to dashboard after short delay
             setTimeout(() => {
                 console.log('Redirecting to dashboard...');
-                window.location.href = 'dashboard.html';
+                window.location.href = 'views/dashboard.html';
             }, 1500);
             
         } else {
